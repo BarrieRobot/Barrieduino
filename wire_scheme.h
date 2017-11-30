@@ -7,8 +7,8 @@
 
 #include <Arduino.h>
 
-#define LED1_PIN		3
-#define LED2_PIN		4
+#define LED1_PIN        3
+#define LED2_PIN        4
 
 #define ONE_WIRE_PIN    2
 
@@ -20,5 +20,28 @@
 #define RFID_TIMEOUT    50
 
 const uint8_t ColdServoPins[] = {9, 10, 11, 12};
+
+#define CUP_DROP_SWITCH 43
+#define CUP_DETE_SWITCH 40
+#define CANISTER_SWITCH 41
+
+#define DISPENSION_ACTUATOR 50
+#define CANISTER_ACTUATOR   51
+
+const int8_t CoffeeKeys[] = {A10, A9, A8, A12, A11};
+
+// Also throw in a enum with the result of the keys
+enum drinks: uint8_t {
+    coffee = CoffeeKeys[0],
+    can_coffee = CoffeeKeys[1],
+    capucchino = CoffeeKeys[2],
+    cafe_au_lait = CoffeeKeys[3],
+    hot_water = CoffeeKeys[4]
+};
+
+#define RAIN_SENS_PIN   A0
+
+#define WEIGHT_DOUT 4
+#define WEIGHT_SCK  5
 
 #endif //COFFEE_LOADER_WIRING_H
