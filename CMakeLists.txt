@@ -11,7 +11,10 @@ include_directories(
 		D:/Documents/Documents/Arduino/libraries/Rosserial_Arduino_Library/src
 		D:/Documents/Documents/Arduino/libraries/OneWire
 		D:/Documents/Documents/Arduino/libraries/DallasTemperature
+		D:/Documents/Documents/Arduino/libraries/HX711_ADC/src
 )
+
+add_library(mylib wire_scheme.h function_list.h ROS_service.h ROS_code.h ROS_code.cpp ROS_include.h LED_ring.h LED_ring.cpp servo_code.cpp)
 
 #### Uncomment below additional settings as needed.
 set(${CMAKE_PROJECT_NAME}_BOARD mega)
