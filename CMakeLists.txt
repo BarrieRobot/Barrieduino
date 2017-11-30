@@ -4,17 +4,9 @@ set(PROJECT_NAME coffee_loader)
 project(${PROJECT_NAME})
 
 set(${CMAKE_PROJECT_NAME}_SKETCH coffee_loader.ino)
-include_directories(
-		"C:/Program Files (x86)/Arduino/libraries/Servo"
-		D:/Documents/Documents/Arduino/libraries/FastLED
-		D:/Documents/Documents/Arduino/libraries/Streaming
-		D:/Documents/Documents/Arduino/libraries/Rosserial_Arduino_Library/src
-		D:/Documents/Documents/Arduino/libraries/OneWire
-		D:/Documents/Documents/Arduino/libraries/DallasTemperature
-		D:/Documents/Documents/Arduino/libraries/HX711_ADC/src
-)
+include(libs.cmake)
 
-add_library(mylib wire_scheme.h function_list.h ROS_service.h ROS_code.h ROS_code.cpp ROS_include.h LED_ring.h LED_ring.cpp servo_code.cpp)
+add_library(mylib wire_scheme.h function_list.h ROS_service.h ROS_code.h ROS_code.cpp ROS_include.h LED_ring.h LED_ring.cpp servo_code.cpp Sensors.cpp Sensors.h CoffeeMachine.cpp CoffeeMachine.h)
 
 #### Uncomment below additional settings as needed.
 set(${CMAKE_PROJECT_NAME}_BOARD mega)

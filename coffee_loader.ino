@@ -1,8 +1,5 @@
 #include <Arduino.h>
 
-#include "DallasTemperature.h"
-#include <HX711_ADC.h>
-
 #include "wire_scheme.h"
 #include "function_list.h"
 #include "ROS_code.h"
@@ -27,11 +24,14 @@
 #include "LED_ring.h"
 
 // Sensors
-OneWire oneWire(ONE_WIRE_PIN);
-DallasTemperature sensors(&oneWire);
+#include "Sensors.h"
+Sensors sensors;
 
 // Servos
 // See servo_code.cpp
+
+#include "CoffeeMachine.h"
+CoffeeMachine coffeeMachine;
 
 uint32_t RFID_start_t = 0;
 
@@ -50,9 +50,12 @@ void setup() {
     
     // Initialise FastLED rings
     LED_innit();
-    
+
+    // Initialise all sensors
     sensors.begin();
-    
+
+    coffeeMachine.begin();
+
     // Initialise ROS, its subscribers, publishers and services
     ROS_init();
     
@@ -67,9 +70,6 @@ void loop() {
     // Send data to LED strip
     FastLED.show();
     //FastLED.delay(1000/FPS);
-    
-    /*sensors.requestTemperatures();
-    sensors.getTempCByIndex(0);*/
     
     // If a new tag is detected, wait RFID_TIMEOUT ms and collect the tag info
     if (Serial1.available()) {
@@ -96,6 +96,9 @@ void loop() {
     
     // See if servos might need to be reset to closed position
     update_servos();
+
+    // Update coffee machine status
+    coffeeMachine.update();
 }
 
 uint32_t getTagInfo() {
