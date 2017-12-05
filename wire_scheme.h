@@ -22,10 +22,10 @@
 const uint8_t ColdServoPins[] = {9, 10, 11, 12};
 
 #define CUP_DROP_SWITCH 43
-#define CUP_DETE_SWITCH 40
+#define CUP_DET_SWITCH  40
 #define CANISTER_SWITCH 41
 
-#define DISPENSION_ACTUATOR 50
+#define DISPENSING_ACTUATOR 50
 #define CANISTER_ACTUATOR   51
 
 const int8_t CoffeeKeys[] = {A10, A9, A8, A12, A11};

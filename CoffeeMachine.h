@@ -8,8 +8,9 @@
 #include <stdint-gcc.h>
 #include "wire_scheme.h"
 
-#define CANISTER_TIMEOUT    3000
-#define DROP_TIMEOUT        500
+#define CANISTER_TIMEOUT1   3000
+#define CANISTER_TIMEOUT2   500
+#define DROP_TIMEOUT        1000
 #define COFFEE_PRESS_TIME   500
 
 class CoffeeMachine {
@@ -21,7 +22,7 @@ public:
     void update();
 
 private:
-    uint32_t dropStart = 0, canisterRotStart = 0, pressStart = 0;
+    uint32_t dropStart = 0, canisterRotStart = 0, canisterSwitchStart = 0, pressStart = 0;
 };
 
 
