@@ -4,7 +4,6 @@
 
 #include "function_list.h"
 #include "wire_scheme.h"
-#include "ROS_code.h"
 #include <Servo.h>
 
 Servo ColdServo[sizeof(ColdServoPins)];
@@ -18,7 +17,7 @@ void servo_innit() {
 		
 		char buff[60];
 		sprintf(buff, "Arduino: Attaching servo %u on pin %u", i, ColdServoPins[i]);
-		nh.loginfo(buff);
+		logInfo(buff);
 	}
 	for (uint8_t i = 0; i < sizeof(ColdServoPins); ++i) {
 		ColdServo[i].write(SERVO_START_POS);
@@ -45,6 +44,6 @@ void ejectColdDrink(const std_msgs::UInt8 &cmd_msg) {
 		ColdServo[cmd_msg.data].write(SERVO_END_POS);
 		char buff[60];
 		sprintf(buff, "Arduino: Activating servo %u on pin %u", cmd_msg.data, ColdServoPins[cmd_msg.data]);
-		nh.loginfo(buff);
+		logInfo(buff);
 	}
 }

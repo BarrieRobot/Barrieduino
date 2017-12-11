@@ -1,8 +1,25 @@
-//
-// Created by Casper on 30/11/2017.
-//
-
+// Class declaration
 #include "Sensors.h"
+
+// Wiring
+#include "wire_scheme.h"
+
+// Libs used in this file
+#include "DallasTemperature.h"
+#include <HX711_ADC.h>
+
+// Weight sensor
+#define WEIGHT_STABALISING_TIME 2000
+#define WEIGHT_CALIBRATION 1700.0
+HX711_ADC LoadCell(WEIGHT_DOUT, WEIGHT_SCK);
+
+// Temp sensor
+OneWire oneWire(ONE_WIRE_PIN);
+DallasTemperature temperature(&oneWire);
+
+
+/*/-- Code --/*/
+
 
 bool Sensors::begin() {
     temperature.begin();

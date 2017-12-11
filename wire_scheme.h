@@ -31,13 +31,13 @@ const uint8_t ColdServoPins[] = {9, 10, 11, 12};
 const int8_t CoffeeKeys[] = {A10, A9, A8, A12, A11};
 
 // Also throw in a enum with the result of the keys
-enum drinks: uint8_t {
+/*enum drinks: uint8_t {
     coffee = CoffeeKeys[0],
     can_coffee = CoffeeKeys[1],
     capucchino = CoffeeKeys[2],
     cafe_au_lait = CoffeeKeys[3],
     hot_water = CoffeeKeys[4]
-};
+};*/
 
 #define RAIN_SENS_PIN   A0
 

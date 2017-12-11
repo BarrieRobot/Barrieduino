@@ -6,7 +6,7 @@ project(${PROJECT_NAME})
 set(${CMAKE_PROJECT_NAME}_SKETCH coffee_loader.ino)
 include(libs.cmake)
 
-add_library(mylib wire_scheme.h function_list.h ROS_service.h ROS_code.h ROS_code.cpp ROS_include.h LED_ring.h LED_ring.cpp servo_code.cpp Sensors.cpp Sensors.h CoffeeMachine.cpp CoffeeMachine.h)
+add_library(mylib wire_scheme.h function_list.h ROS_code.h ROS_include.h LED_ring.h LED_ring.cpp servo_code.cpp Sensors.cpp Sensors.h CoffeeMachine.cpp CoffeeMachine.h)
 
 #### Uncomment below additional settings as needed.
 set(${CMAKE_PROJECT_NAME}_BOARD mega)

@@ -10,8 +10,5 @@
 #include <std_msgs/UInt16.h>
 #include <std_msgs/UInt32.h>
 #include <std_msgs/String.h>
-#include "ROS_service.h"
-
-using rosserial_arduino::Test;
 
 #endif //COFFEE_LOADER_ROS_INCLUDE_H

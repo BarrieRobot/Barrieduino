@@ -4,7 +4,7 @@
 
 #include <led_sysdefs.h>
 #include "CoffeeMachine.h"
-#include "ROS_code.h"
+#include "function_list.h"
 
 bool CoffeeMachine::begin() {
     for (int i = 0; i < sizeof(CoffeeKeys); ++i) {
@@ -37,7 +37,7 @@ void CoffeeMachine::dropCup() {
 }
 
 void CoffeeMachine::rotateCanister() {
-    nh.loginfo("Cups from the current canister are depleted, rotating to the next");
+    logInfo("Cups from the current canister are depleted, rotating to the next");
     canisterRotStart = millis();
     digitalWrite(CANISTER_ACTUATOR, HIGH);
 }
@@ -62,7 +62,7 @@ void CoffeeMachine::update() {
         digitalWrite(CANISTER_ACTUATOR, LOW);
         // Throw warning if no cups are detected still. TODO: check if delay is needed for cups to fall through
         if (digitalRead(CUP_DET_SWITCH) == true) {
-            nh.logwarn("Cup stock is completely depleted");
+            logWarn("Cup stock is completely depleted");
         } else {
             // Now that new stock is present, drop the cup
             dropCup();
