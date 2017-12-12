@@ -21,8 +21,8 @@ void ejectColdDrink(uint8_t number);
 // RFID reader
 uint32_t getTagInfo();
 
-void logInfo(char* message);
-void logWarn(char* message);
+void logInfo(const char* message);
+void logWarn(const char* message);
 //void callback(const Test::Request &req, Test::Response &res);
 
 #endif //COFFEE_LOADER_FUNCTION_LIST_H

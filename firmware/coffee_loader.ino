@@ -57,8 +57,8 @@ void ROS_init() {
     //nh.advertiseService(server);
 }
 
-void logInfo(char* message) { nh.loginfo(message); }
-void logWarn(char* message) { nh.logwarn(message); }
+void logInfo(const char* message) { nh.loginfo(message); }
+void logWarn(const char* message) { nh.logwarn(message); }
 
 void setup() {
     delay(500);

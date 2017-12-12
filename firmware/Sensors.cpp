@@ -5,8 +5,6 @@
 #include "wire_scheme.h"
 
 // Libs used in this file
-#include "DallasTemperature.h"
-#include <HX711_ADC.h>
 
 // Weight sensor
 #define WEIGHT_STABALISING_TIME 2000

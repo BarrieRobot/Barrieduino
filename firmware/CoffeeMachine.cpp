@@ -2,7 +2,6 @@
 // Created by Casper on 30/11/2017.
 //
 
-#include <led_sysdefs.h>
 #include "CoffeeMachine.h"
 #include "function_list.h"
 
@@ -45,7 +44,7 @@ void CoffeeMachine::rotateCanister() {
 void CoffeeMachine::update() {
     // Reset keypress of coffee machine after COFFEE_PRESS_TIME
     if (pressStart && pressStart + COFFEE_PRESS_TIME > millis()) {
-        for (uint8_t j = 0; j < sizeof(CoffeeKeys); ++j) {
+        for (uint8_t i = 0; i < sizeof(CoffeeKeys); ++i) {
             digitalWrite(CoffeeKeys[i], LOW);
         }
     }

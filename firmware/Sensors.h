@@ -6,6 +6,8 @@
 #define COFFEE_LOADER_SENSORS_H
 
 #include <Arduino.h>
+#include <DallasTemperature.h>
+#include <HX711_ADC.h>
 
 class Sensors {
 public:
