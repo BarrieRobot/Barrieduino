@@ -5,7 +5,6 @@
 #ifndef COFFEE_LOADER_COFFEEMACHINE_H
 #define COFFEE_LOADER_COFFEEMACHINE_H
 
-#include <stdint-gcc.h>
 #include "wire_scheme.h"
 
 #define CANISTER_TIMEOUT1   3000

@@ -8,7 +8,6 @@
 
 Servo ColdServo[sizeof(ColdServoPins)];
 uint32_t TServoActivated = 0;
-uint32_t RFID_start_t = 0;
 
 void servo_innit() {
 	pinMode(SERVO_POWER_PIN, OUTPUT);

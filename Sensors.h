@@ -5,6 +5,8 @@
 #ifndef COFFEE_LOADER_SENSORS_H
 #define COFFEE_LOADER_SENSORS_H
 
+#include <Arduino.h>
+
 class Sensors {
 public:
     bool begin();
