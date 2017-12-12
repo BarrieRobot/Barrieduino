@@ -1,18 +1,26 @@
-cmake_minimum_required(VERSION 2.8.4)
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/cmake/ArduinoToolchain.cmake)
-set(PROJECT_NAME coffee_loader)
-project(${PROJECT_NAME})
+cmake_minimum_required(VERSION 2.8.3)
+project(barrieduino)
 
-set(${CMAKE_PROJECT_NAME}_SKETCH coffee_loader.ino)
-include(libs.cmake)
+find_package(catkin REQUIRED COMPONENTS
+  rosserial_arduino
+  rosserial_client
+)
 
-add_library(mylib wire_scheme.h function_list.h ROS_code.h ROS_include.h LED_ring.h LED_ring.cpp servo_code.cpp Sensors.cpp Sensors.h CoffeeMachine.cpp CoffeeMachine.h)
+catkin_package()
 
-#### Uncomment below additional settings as needed.
-set(${CMAKE_PROJECT_NAME}_BOARD mega)
-# set(${CMAKE_PROJECT_NAME}_PORT /dev/ttyACM0)
-set(mega.build.mcu atmega2560)
-# set(mega.upload.protocol wiring)
-# set(mega.upload.speed 115200)
+rosserial_generate_ros_lib(
+  PACKAGE rosserial_arduino
+  SCRIPT make_libraries.py
+)
 
-generate_arduino_firmware(${CMAKE_PROJECT_NAME})
+rosserial_configure_client(
+  DIRECTORY firmware
+  TOOLCHAIN_FILE ${ROSSERIAL_ARDUINO_TOOLCHAIN}
+)
+
+rosserial_add_client_target(firmware code ALL)
+rosserial_add_client_target(firmware code-upload)
+
+#add_custom_target(target_name ALL catkin_make WORKING_DIRECTORY /home/casper/catkin_ws/ SOURCES ${SOURCE_FILES})
+#include(libs.cmake)
+#add_executable(my_exec ${SOURCE_FILES})
