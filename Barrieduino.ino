@@ -21,7 +21,7 @@
 /*/-- Object declarations --/*/
 
 // FastLED
-#include "LED_ring.h"
+//#include "FastLED.h"
 
 // Sensors
 #include "Sensors.h"
@@ -68,7 +68,7 @@ void setup() {
 
 void loop() {
     // Send data to LED strip
-    FastLED.show();
+    //FastLED.show();
     //FastLED.delay(1000/FPS);
     
     // If a new tag is detected, wait RFID_TIMEOUT ms and collect the tag info

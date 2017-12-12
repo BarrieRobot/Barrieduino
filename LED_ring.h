@@ -5,7 +5,8 @@
 #ifndef COFFEE_LOADER_LED_RING_H
 #define COFFEE_LOADER_LED_RING_H
 
-#include <FastLED.h>
+#include "FastLED.h"
+FASTLED_USING_NAMESPACE
 
 #define LED_TYPE        WS2812B
 #define COLOR_ORDER     GRB
