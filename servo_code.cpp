@@ -4,12 +4,10 @@
 
 #include "function_list.h"
 #include "wire_scheme.h"
-#include "ROS_code.h"
 #include <Servo.h>
 
 Servo ColdServo[sizeof(ColdServoPins)];
 uint32_t TServoActivated = 0;
-uint32_t RFID_start_t = 0;
 
 void servo_innit() {
 	pinMode(SERVO_POWER_PIN, OUTPUT);
@@ -18,7 +16,7 @@ void servo_innit() {
 		
 		char buff[60];
 		sprintf(buff, "Arduino: Attaching servo %u on pin %u", i, ColdServoPins[i]);
-		nh.loginfo(buff);
+		logInfo(buff);
 	}
 	for (uint8_t i = 0; i < sizeof(ColdServoPins); ++i) {
 		ColdServo[i].write(SERVO_START_POS);
@@ -35,16 +33,19 @@ void update_servos() {
 			ColdServo[i].write(SERVO_START_POS);
 		}
 		TServoActivated = 0;
+		logInfo("Deactivated servo");
 	}
 }
 
-void ejectColdDrink(const std_msgs::UInt8 &cmd_msg) {
-	if (cmd_msg.data < sizeof(ColdServoPins)) {
+void ejectColdDrink(uint8_t drink) {
+	if (drink < sizeof(ColdServoPins)) {
 		// Set time the servo was activated to set off reset after SERVO_TIMEOUT
 		TServoActivated = static_cast<uint32_t>(millis());
-		ColdServo[cmd_msg.data].write(SERVO_END_POS);
+		ColdServo[drink].write(SERVO_END_POS);
 		char buff[60];
-		sprintf(buff, "Arduino: Activating servo %u on pin %u", cmd_msg.data, ColdServoPins[cmd_msg.data]);
-		nh.loginfo(buff);
+		sprintf(buff, "Arduino: Activating servo %u on pin %u", drink, ColdServoPins[drink]);
+		logInfo(buff);
+	} else {
+		logWarn("ejectColdDrink: drink is outside of possible range");
 	}
 }

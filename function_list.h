@@ -7,18 +7,22 @@
 
 #include "ROS_include.h"
 
+// LED ring
 void LED_innit();
 inline uint16_t promilleToFrac(uint16_t promille);
-void updateProgress(const std_msgs::UInt16 &cmd_msg);
+void updateProgress(uint16_t promille);
+void FastLED_show();
 
 // Servos
 void servo_innit();
 void update_servos();
-void ejectColdDrink(const std_msgs::UInt8 &cmd_msg);
+void ejectColdDrink(uint8_t drink);
 
 // RFID reader
 uint32_t getTagInfo();
 
-void callback(const Test::Request &req, Test::Response &res);
+void activateOrder(const beginner_tutorials::activateOrder message);
+void logInfo(const char* message);
+void logWarn(const char* message);
 
 #endif //COFFEE_LOADER_FUNCTION_LIST_H

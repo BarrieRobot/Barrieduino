@@ -1,7 +1,3 @@
-//
-// Created by Casper on 30/11/2017.
-//
-
 #include "function_list.h"
 #include "wire_scheme.h"
 #include "LED_ring.h"
@@ -26,21 +22,26 @@ uint16_t promilleToFrac(uint16_t promille) {
 	return (((uint32_t) promille << 8) * (uint8_t) NUM_LEDS) / 1000;
 }
 
-void updateProgress(const std_msgs::UInt16 &cmd_msg) {
-	uint16_t progress = promilleToFrac(cmd_msg.data);
+void updateProgress(uint16_t promille) {
+	uint16_t progress = promilleToFrac(promille);
 	bool reached_last = false;
+	logInfo("Updating LED progress");
 	
 	// Loop and subtract 255 per pixel until we meet a fraction.
 	// Set the pixel to the fraction and leave the other LED's off
-	for (uint8_t i = 0; i < NUM_LEDS; ++i) {
+	for (auto &pixel : led1) {
 		if (reached_last) {
-			led1[i] = 0;
+			pixel = 0;
 		} else if (progress > 0xFF) {
-			led1[i] = CRGB::White;
+			pixel = CRGB::White;
 			progress -= 0xFF;
 		} else {
-			led1[i] = progress;
+			pixel = progress;
 			reached_last = true;
 		}
 	}
+}
+
+void FastLED_show () {
+	FastLED.show();
 }

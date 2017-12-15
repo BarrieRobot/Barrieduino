@@ -4,6 +4,18 @@
 #include "function_list.h"
 #include "ROS_code.h"
 
+/*
+ * Rules of using ROS in Arduino code:
+ *
+ * Rule 1: No shared objects in header files. NONE, DO YOU HEAR ME?!@
+ * Rule 2: All ROS things go in the main file (this one).
+ *         Transferring it to a file which does nog contain setup() and loop() will not work.
+ * Rule 3: Everything that you want to influence from within this file (or another) you do using functions.
+ *         No direct mingling, USE GETTERS AND SETTERS YOU FUCK
+ *
+ * Thank you for your attention.
+ */
+
 
 /*/-- Definitions --/*/
 
@@ -20,9 +32,6 @@
 
 /*/-- Object declarations --/*/
 
-// FastLED
-#include "LED_ring.h"
-
 // Sensors
 #include "Sensors.h"
 Sensors sensors;
@@ -36,6 +45,35 @@ CoffeeMachine coffeeMachine;
 uint32_t RFID_start_t = 0;
 
 /*/-- Code --/*/
+
+void ROS_init() {
+    // Initialise ROS node and add subscribe to topics
+    nh.initNode();
+    nh.advertise(RFID_pub);
+    nh.subscribe(LED_subscriber);
+    nh.subscribe(activateOrder_sub);
+
+    //nh.serviceClient(client);
+    //nh.advertiseService(server);
+}
+
+void activateOrder(const beginner_tutorials::activateOrder message) {
+    // Dispense cup
+    if (message.order_type == 0) {
+        coffeeMachine.dropCup();
+    }
+    // Coffee machine
+    else if (message.order_type == 1) {
+        coffeeMachine.makeDrink(message.selection);
+    }
+    // Cold drinks
+    else if (message.order_type == 2) {
+        ejectColdDrink(message.selection);
+    }
+}
+
+void logInfo(const char* message) { nh.loginfo(message); }
+void logWarn(const char* message) { nh.logwarn(message); }
 
 void setup() {
     delay(500);
@@ -63,13 +101,12 @@ void setup() {
     servo_innit();
     
     //while(!nh.connected()) nh.spinOnce();
-    nh.loginfo("Arduino: Startup complete");
+    logInfo("Arduino: Startup complete");
 }
 
 void loop() {
     // Send data to LED strip
-    FastLED.show();
-    //FastLED.delay(1000/FPS);
+    FastLED_show();
     
     // If a new tag is detected, wait RFID_TIMEOUT ms and collect the tag info
     if (Serial1.available()) {
@@ -78,11 +115,8 @@ void loop() {
         } else if (millis() > RFID_start_t + RFID_TIMEOUT) {
             uint32_t id = getTagInfo();
             if (id) {
-                //digitalWrite(LED_BUILTIN, HIGH);
                 RFID_msg.data = id;
                 RFID_pub.publish(&RFID_msg);
-                //delay(500);
-                //digitalWrite(LED_BUILTIN, LOW);
             }
         }
     }
@@ -115,10 +149,3 @@ uint32_t getTagInfo() {
 }
 
 int j = 0;
-
-void callback(const Test::Request &req, Test::Response &res) {
-    if ((j++) % 2)
-        res.output = "hello";
-    else
-        res.output = "world";
-}

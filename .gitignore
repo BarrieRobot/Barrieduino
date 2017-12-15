@@ -2,3 +2,7 @@
 cmake/
 cmake-build-debug/
 libs.cmake
+
+#!ros_lib/
+#ros_lib/*
+#!roslib/beginner_tutorials/

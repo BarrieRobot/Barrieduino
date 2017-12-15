@@ -5,7 +5,6 @@
 #ifndef COFFEE_LOADER_COFFEEMACHINE_H
 #define COFFEE_LOADER_COFFEEMACHINE_H
 
-#include <stdint-gcc.h>
 #include "wire_scheme.h"
 
 #define CANISTER_TIMEOUT1   3000
@@ -18,8 +17,10 @@ public:
     bool begin();
     void makeDrink(uint8_t choice);
     void dropCup();
-    void rotateCanister();
     void update();
+
+private:
+    void rotateCanister();
 
 private:
     uint32_t dropStart = 0, canisterRotStart = 0, canisterSwitchStart = 0, pressStart = 0;
