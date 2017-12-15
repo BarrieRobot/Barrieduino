@@ -15,7 +15,7 @@ ros::NodeHandle nh;
 //ros::ServiceServer<Test::Request, Test::Response> server("test_srv", &callback);
 
 ros::Subscriber<std_msgs::UInt16> LED_subscriber("LED_progress", &updateProgress);
-ros::Subscriber<std_msgs::UInt8> ColdDrink_subscriber("cold_drinks", &ejectColdDrink);
+ros::Subscriber<beginner_tutorials::activateOrder> activateOrder_sub("activateOrder", &activateOrder);
 
 std_msgs::UInt32 RFID_msg;
 ros::Publisher RFID_pub("RFID", &RFID_msg);

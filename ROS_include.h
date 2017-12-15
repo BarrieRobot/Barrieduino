@@ -11,4 +11,7 @@
 #include <std_msgs/UInt32.h>
 #include <std_msgs/String.h>
 
+// Custom messages
+#include "beginner_tutorials/activateOrder.h"
+
 #endif //COFFEE_LOADER_ROS_INCLUDE_H

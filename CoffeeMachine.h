@@ -17,8 +17,10 @@ public:
     bool begin();
     void makeDrink(uint8_t choice);
     void dropCup();
-    void rotateCanister();
     void update();
+
+private:
+    void rotateCanister();
 
 private:
     uint32_t dropStart = 0, canisterRotStart = 0, canisterSwitchStart = 0, pressStart = 0;

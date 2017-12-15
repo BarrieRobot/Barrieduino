@@ -33,16 +33,19 @@ void update_servos() {
 			ColdServo[i].write(SERVO_START_POS);
 		}
 		TServoActivated = 0;
+		logInfo("Deactivated servo");
 	}
 }
 
-void ejectColdDrink(const std_msgs::UInt8 &cmd_msg) {
-	if (cmd_msg.data < sizeof(ColdServoPins)) {
+void ejectColdDrink(uint8_t drink) {
+	if (drink < sizeof(ColdServoPins)) {
 		// Set time the servo was activated to set off reset after SERVO_TIMEOUT
 		TServoActivated = static_cast<uint32_t>(millis());
-		ColdServo[cmd_msg.data].write(SERVO_END_POS);
+		ColdServo[drink].write(SERVO_END_POS);
 		char buff[60];
-		sprintf(buff, "Arduino: Activating servo %u on pin %u", cmd_msg.data, ColdServoPins[cmd_msg.data]);
+		sprintf(buff, "Arduino: Activating servo %u on pin %u", drink, ColdServoPins[drink]);
 		logInfo(buff);
+	} else {
+		logWarn("ejectColdDrink: drink is outside of possible range");
 	}
 }

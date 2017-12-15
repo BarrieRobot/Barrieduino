@@ -25,6 +25,7 @@ uint16_t promilleToFrac(uint16_t promille) {
 void updateProgress(uint16_t promille) {
 	uint16_t progress = promilleToFrac(promille);
 	bool reached_last = false;
+	logInfo("Updating LED progress");
 	
 	// Loop and subtract 255 per pixel until we meet a fraction.
 	// Set the pixel to the fraction and leave the other LED's off

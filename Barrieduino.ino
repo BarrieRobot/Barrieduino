@@ -51,10 +51,25 @@ void ROS_init() {
     nh.initNode();
     nh.advertise(RFID_pub);
     nh.subscribe(LED_subscriber);
-    nh.subscribe(ColdDrink_subscriber);
+    nh.subscribe(activateOrder_sub);
 
     //nh.serviceClient(client);
     //nh.advertiseService(server);
+}
+
+void activateOrder(const beginner_tutorials::activateOrder message) {
+    // Dispense cup
+    if (message.order_type == 0) {
+        coffeeMachine.dropCup();
+    }
+    // Coffee machine
+    else if (message.order_type == 1) {
+        coffeeMachine.makeDrink(message.selection);
+    }
+    // Cold drinks
+    else if (message.order_type == 2) {
+        ejectColdDrink(message.selection);
+    }
 }
 
 void logInfo(const char* message) { nh.loginfo(message); }

@@ -16,11 +16,12 @@ void FastLED_show();
 // Servos
 void servo_innit();
 void update_servos();
-void ejectColdDrink(const std_msgs::UInt8 &cmd_msg);
+void ejectColdDrink(uint8_t drink);
 
 // RFID reader
 uint32_t getTagInfo();
 
+void activateOrder(const beginner_tutorials::activateOrder message);
 void logInfo(const char* message);
 void logWarn(const char* message);
 

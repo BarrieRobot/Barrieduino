@@ -3,7 +3,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/cmake/ArduinoToolchain.cmake)
 set(PROJECT_NAME coffee_loader)
 project(${PROJECT_NAME})
 
-set(${CMAKE_PROJECT_NAME}_SKETCH coffee_loader.ino)
+set(${CMAKE_PROJECT_NAME}_SKETCH Barrieduino.ino)
 include(libs.cmake)
 
 add_library(mylib wire_scheme.h function_list.h ROS_code.h ROS_include.h LED_ring.h LED_ring.cpp servo_code.cpp Sensors.cpp Sensors.h CoffeeMachine.cpp CoffeeMachine.h)
