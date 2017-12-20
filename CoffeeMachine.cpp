@@ -7,6 +7,7 @@
 
 bool CoffeeMachine::begin() {
     for (int i = 0; i < sizeof(CoffeeKeys); ++i) {
+        digitalWrite(CoffeeKeys[i], HIGH);
         pinMode(CoffeeKeys[i], OUTPUT);
     }
 
@@ -26,7 +27,7 @@ void CoffeeMachine::makeDrink(uint8_t choice) {
     char buffer[60];
     sprintf(buffer, "Activating button %u from the coffeemachine", choice);
     logInfo(buffer);
-    digitalWrite(CoffeeKeys[choice], HIGH);
+    digitalWrite(CoffeeKeys[choice], LOW);
 }
 
 void CoffeeMachine::dropCup() {
@@ -58,7 +59,7 @@ void CoffeeMachine::update() {
     if (pressStart && pressStart + COFFEE_PRESS_TIME < millis()) {
         pressStart = 0;
         for (uint8_t i = 0; i < sizeof(CoffeeKeys); ++i) {
-            digitalWrite(CoffeeKeys[i], LOW);
+            digitalWrite(CoffeeKeys[i], HIGH);
         }
         logInfo("Coffee key release");
     }

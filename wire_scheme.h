@@ -28,7 +28,8 @@ const uint8_t ColdServoPins[] = {9, 10, 11};
 #define DISPENSING_ACTUATOR 50
 #define CANISTER_ACTUATOR   51
 
-const uint8_t CoffeeKeys[] = {A10, A9, A8, A12, A11};
+//const uint8_t CoffeeKeys[] = {A10, A9, A8, A12, A11};
+const uint8_t CoffeeKeys[] = {A12, A11, A10, A9, A8};
 
 // Also throw in a enum with the result of the keys
 /*enum drinks: uint8_t {
