@@ -21,7 +21,8 @@ void ejectColdDrink(uint8_t drink);
 // RFID reader
 uint32_t getTagInfo();
 
-void activateOrder(const beginner_tutorials::activateOrder message);
+void activateOrder(const barrieduino::activateOrder message);
+void sensorRequest(const sensorRequest::Request &request, sensorRequest::Response &response);
 void logInfo(const char* message);
 void logWarn(const char* message);
 

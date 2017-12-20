@@ -12,6 +12,10 @@
 #include <std_msgs/String.h>
 
 // Custom messages
-#include "beginner_tutorials/activateOrder.h"
+#include "ros_lib/barrieduino/activateOrder.h"
+
+// Custom services
+#include "ros_lib/barrieduino/sensorRequest.h"
+using barrieduino::sensorRequest;
 
 #endif //COFFEE_LOADER_ROS_INCLUDE_H

@@ -1,12 +1,12 @@
-#ifndef _ROS_beginner_tutorials_activateOrder_h
-#define _ROS_beginner_tutorials_activateOrder_h
+#ifndef _ROS_barrieduino_activateOrder_h
+#define _ROS_barrieduino_activateOrder_h
 
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include "ros/msg.h"
 
-namespace beginner_tutorials
+namespace barrieduino
 {
 
   class activateOrder : public ros::Msg
@@ -43,7 +43,7 @@ namespace beginner_tutorials
      return offset;
     }
 
-    const char * getType(){ return "beginner_tutorials/activateOrder"; };
+    const char * getType(){ return "barrieduino/activateOrder"; };
     const char * getMD5(){ return "b50f5f942b181fcc2f8dc6f4e8ff879c"; };
 
   };

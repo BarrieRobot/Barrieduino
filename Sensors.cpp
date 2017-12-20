@@ -1,5 +1,6 @@
 // Class declaration
 #include "Sensors.h"
+#include "ROS_include.h"
 
 // Wiring
 #include "wire_scheme.h"
@@ -41,6 +42,14 @@ float Sensors::getWeight() {
     return LoadCell.getData();
 }
 
-uint16_t Sensors::detectSpillage() {
-    return analogRead(RAIN_SENS_PIN);
+float Sensors::detectSpillage() {
+    return analogRead(RAIN_SENS_PIN) / 1024.0;
+}
+
+uint8_t Sensors::getStock(uint8_t column) {
+    return column;
+}
+
+bool Sensors::getLasers(uint8_t gap) {
+    return false;
 }

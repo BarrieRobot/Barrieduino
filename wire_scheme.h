@@ -41,7 +41,7 @@ const uint8_t CoffeeKeys[] = {A10, A9, A8, A12, A11};
 
 #define RAIN_SENS_PIN   A0
 
-#define WEIGHT_DOUT 4
-#define WEIGHT_SCK  5
+#define WEIGHT_DOUT 26
+#define WEIGHT_SCK  27
 
 #endif //COFFEE_LOADER_WIRING_H

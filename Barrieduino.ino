@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Streaming.h>
 
 #include "wire_scheme.h"
 #include "function_list.h"
@@ -52,12 +53,12 @@ void ROS_init() {
     nh.advertise(RFID_pub);
     nh.subscribe(LED_subscriber);
     nh.subscribe(activateOrder_sub);
+    nh.advertiseService(sensorRequest_server);
 
     //nh.serviceClient(client);
-    //nh.advertiseService(server);
 }
 
-void activateOrder(const beginner_tutorials::activateOrder message) {
+void activateOrder(const barrieduino::activateOrder message) {
     // Dispense cup
     if (message.order_type == 0) {
         coffeeMachine.dropCup();
@@ -69,6 +70,49 @@ void activateOrder(const beginner_tutorials::activateOrder message) {
     // Cold drinks
     else if (message.order_type == 2) {
         ejectColdDrink(message.selection);
+    }
+}
+
+void sensorRequest(const sensorRequest::Request &request, sensorRequest::Response &response) {
+    char buffer[50];
+    sprintf(buffer, "Got request for sensor %s", request.sensor);
+    logInfo(buffer);
+    if (strcmp(request.sensor, "temperature") == 0) {
+        response.status = 1;
+        response.value = sensors.getTemperature();
+    }
+    else if (strcmp(request.sensor, "weight") == 0) {
+        response.status = 1;
+        response.value = sensors.getWeight();
+    }
+    else if (strcmp(request.sensor, "spill") == 0) {
+        response.status = 1;
+        response.value = sensors.detectSpillage();
+    }
+    else if (strcmp(request.sensor, "laser-0") == 0) {
+        response.status = 1;
+        response.value = sensors.getLasers(0);
+    }
+    else if (strcmp(request.sensor, "laser-1") == 0) {
+        response.status = 1;
+        response.value = sensors.getLasers(1);
+    }
+    else if (strcmp(request.sensor, "cold-stock-0") == 0) {
+        response.status = 1;
+        response.value = sensors.getStock(0);
+    }
+    else if (strcmp(request.sensor, "cold-stock-1") == 0) {
+        response.status = 1;
+        response.value = sensors.getStock(1);
+    }
+    else if (strcmp(request.sensor, "cold-stock-2") == 0) {
+        response.status = 1;
+        response.value = sensors.getStock(2);
+    }
+    else {
+        logWarn("Could not match sensor name");
+        response.status = 0;
+        response.value = 0.0;
     }
 }
 
@@ -115,6 +159,9 @@ void loop() {
         } else if (millis() > RFID_start_t + RFID_TIMEOUT) {
             uint32_t id = getTagInfo();
             if (id) {
+                char buffer[50];
+                sprintf(buffer, "Scanned RFID tag with id %lu", id);
+                logInfo(buffer);
                 RFID_msg.data = id;
                 RFID_pub.publish(&RFID_msg);
             }
