@@ -10,7 +10,7 @@
 // LED ring
 void LED_innit();
 inline uint16_t promilleToFrac(uint16_t promille);
-void updateProgress(uint16_t promille);
+void updateProgress(uint8_t ring, uint16_t promille);
 void FastLED_show();
 
 // Servos
@@ -24,6 +24,7 @@ uint32_t getTagInfo();
 
 void activateOrder(const barrieduino::activateOrder message);
 void ros_diaphragm(const barrieduino::diaphragm message);
+void ros_LED(const barrieduino::ledRing message);
 void sensorRequest(const sensorRequest::Request &request, sensorRequest::Response &response);
 void logInfo(const char* message);
 void logWarn(const char* message);

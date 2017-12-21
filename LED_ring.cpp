@@ -22,7 +22,7 @@ uint16_t promilleToFrac(uint16_t promille) {
 	return (((uint32_t) promille << 8) * (uint8_t) NUM_LEDS) / 1000;
 }
 
-void updateProgress(uint16_t promille) {
+void updateProgress(uint8_t ring, uint16_t promille) {
 	uint16_t progress = promilleToFrac(promille);
 	bool reached_last = false;
 	logInfo("Updating LED progress");

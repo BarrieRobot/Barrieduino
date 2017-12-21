@@ -77,6 +77,12 @@ void ros_diaphragm(const barrieduino::diaphragm message) {
     moveDiaphragm(message.diaphragm, message.position);
 }
 
+void ros_LED(const barrieduino::ledRing message) {
+    if (message.mode == 0) {
+        updateProgress(message.ring, message.param);
+    }
+}
+
 void sensorRequest(const sensorRequest::Request &request, sensorRequest::Response &response) {
     char buffer[50];
     sprintf(buffer, "Got request for sensor %s", request.sensor);

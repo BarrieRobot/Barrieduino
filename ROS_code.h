@@ -15,7 +15,7 @@ ros::ServiceServer<sensorRequest::Request, sensorRequest::Response> sensorReques
 //ros::ServiceClient<Test::Request, Test::Response> client("test_srv");
 //ros::ServiceServer<Test::Request, Test::Response> server("test_srv", &callback);
 
-ros::Subscriber<std_msgs::UInt16> LED_subscriber("LED_progress", &updateProgress);
+ros::Subscriber<barrieduino::ledRing> LED_subscriber("LED_progress", &ros_LED);
 ros::Subscriber<barrieduino::diaphragm> diaphragm_subscriber("diaphragm", &ros_diaphragm);
 ros::Subscriber<barrieduino::activateOrder> activateOrder_sub("activateOrder", &activateOrder);
 
