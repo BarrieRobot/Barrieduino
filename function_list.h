@@ -17,11 +17,13 @@ void FastLED_show();
 void servo_innit();
 void update_servos();
 void ejectColdDrink(uint8_t drink);
+void moveDiaphragm(uint8_t diaphragm, bool position);
 
 // RFID reader
 uint32_t getTagInfo();
 
 void activateOrder(const barrieduino::activateOrder message);
+void ros_diaphragm(const barrieduino::diaphragm message);
 void sensorRequest(const sensorRequest::Request &request, sensorRequest::Response &response);
 void logInfo(const char* message);
 void logWarn(const char* message);

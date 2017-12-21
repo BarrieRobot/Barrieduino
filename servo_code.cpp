@@ -7,21 +7,29 @@
 #include <Servo.h>
 
 Servo ColdServo[sizeof(ColdServoPins)];
+Servo DiaphragmServo[sizeof(DiaphragmPins)];
 uint32_t TServoActivated = 0;
 
 void servo_innit() {
 	pinMode(SERVO_POWER_PIN, OUTPUT);
+
+	char buff[65];
 	for (uint8_t i = 0; i < sizeof(ColdServoPins); ++i) {
 		ColdServo[i].attach(ColdServoPins[i]);
-		
-		char buff[60];
-		sprintf(buff, "Arduino: Attaching servo %u on pin %u", i, ColdServoPins[i]);
+
+		sprintf(buff, "Arduino: Attaching cold drink servo %u on pin %u", i, ColdServoPins[i]);
+		logInfo(buff);
+	}
+	for (uint8_t i = 0; i < sizeof(DiaphragmPins); ++i) {
+		DiaphragmServo[i].attach(DiaphragmPins[i]);
+
+		sprintf(buff, "Arduino: Attaching diaphragm servo %u on pin %u", i, DiaphragmPins[i]);
 		logInfo(buff);
 	}
 	for (uint8_t i = 0; i < sizeof(ColdServoPins); ++i) {
 		ColdServo[i].write(SERVO_START_POS);
 	}
-	delay(500);
+	delay(50);
 	digitalWrite(SERVO_POWER_PIN, LOW);  // The relay is inverted
 }
 
@@ -47,5 +55,15 @@ void ejectColdDrink(uint8_t drink) {
 		logInfo(buff);
 	} else {
 		logWarn("ejectColdDrink: drink is outside of possible range");
+	}
+}
+
+void moveDiaphragm(uint8_t diaphragm, bool position) {
+	if (position) {
+        logInfo("Opening diaphragm");
+		DiaphragmServo[diaphragm].write(DIAPHRAGM_OPEN_POS);
+	} else {
+        logInfo("Closing diaphragm");
+        DiaphragmServo[diaphragm].write(DIAPHRAGM_CLOSED_POS);
 	}
 }

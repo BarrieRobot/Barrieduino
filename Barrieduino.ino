@@ -73,6 +73,10 @@ void activateOrder(const barrieduino::activateOrder message) {
     }
 }
 
+void ros_diaphragm(const barrieduino::diaphragm message) {
+    moveDiaphragm(message.diaphragm, message.position);
+}
+
 void sensorRequest(const sensorRequest::Request &request, sensorRequest::Response &response) {
     char buffer[50];
     sprintf(buffer, "Got request for sensor %s", request.sensor);

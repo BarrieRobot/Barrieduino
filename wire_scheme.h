@@ -7,6 +7,8 @@
 
 #include <Arduino.h>
 
+#define RFID_TIMEOUT    50
+
 #define LED1_PIN        3
 #define LED2_PIN        4
 
@@ -17,9 +19,12 @@
 #define SERVO_END_POS   70
 #define SERVO_TIMEOUT   1000
 
-#define RFID_TIMEOUT    50
+#define DIAPHRAGM_CLOSED_POS    50
+#define DIAPHRAGM_OPEN_POS      140
+#define DIAPHRAGM_DURATION      1000
 
 const uint8_t ColdServoPins[] = {9, 10, 11};
+const uint8_t DiaphragmPins[] = {22, 23};
 
 #define CUP_DROP_SWITCH 43
 #define CUP_DET_SWITCH  40

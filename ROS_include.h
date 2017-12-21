@@ -13,6 +13,7 @@
 
 // Custom messages
 #include "ros_lib/barrieduino/activateOrder.h"
+#include "ros_lib/barrieduino/diaphragm.h"
 
 // Custom services
 #include "ros_lib/barrieduino/sensorRequest.h"
