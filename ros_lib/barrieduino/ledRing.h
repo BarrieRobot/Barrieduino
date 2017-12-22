@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "ros/msg.h"
-#include "barrieduino/HSL.h"
+#include "HSL.h"
 
 namespace barrieduino
 {

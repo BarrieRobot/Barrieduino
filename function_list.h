@@ -7,12 +7,6 @@
 
 #include "ROS_include.h"
 
-// LED ring
-void LED_innit();
-inline uint16_t promilleToFrac(uint16_t promille);
-void updateProgress(uint8_t ring, uint16_t promille);
-void FastLED_show();
-
 // Servos
 void servo_innit();
 void update_servos();

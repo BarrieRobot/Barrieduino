@@ -33,6 +33,10 @@
 
 /*/-- Object declarations --/*/
 
+// LED rings
+#include "LED_ring.h"
+LED_ring rings[] = {LED_ring(), LED_ring()};
+
 // Sensors
 #include "Sensors.h"
 Sensors sensors;
@@ -78,8 +82,16 @@ void ros_diaphragm(const barrieduino::diaphragm message) {
 }
 
 void ros_LED(const barrieduino::ledRing message) {
+    if (message.ring > 2) {
+        logInfo("`ring` property should be either 0 or 1");
+        return;
+    }
+
+    rings[message.ring].setMode(message.mode);
+    rings[message.ring].setBaseColor(message.color.hue, message.color.sat, message.color.val);
+
     if (message.mode == 0) {
-        updateProgress(message.ring, message.param);
+        rings[message.ring].progressMode(message.param);
     }
 }
 
@@ -141,7 +153,8 @@ void setup() {
     Serial1.begin(19200);
     
     // Initialise FastLED rings
-    LED_innit();
+    rings[0].begin(0);
+    rings[1].begin(1);
 
     // Initialise all sensors
     sensors.begin();
@@ -160,7 +173,7 @@ void setup() {
 
 void loop() {
     // Send data to LED strip
-    FastLED_show();
+    rings[0].show();
     
     // If a new tag is detected, wait RFID_TIMEOUT ms and collect the tag info
     if (Serial1.available()) {
@@ -204,5 +217,3 @@ uint32_t getTagInfo() {
     if (i != 4) { return 0; }
     else { return id; }
 }
-
-int j = 0;

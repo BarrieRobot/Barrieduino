@@ -14,6 +14,7 @@
 // Custom messages
 #include "ros_lib/barrieduino/activateOrder.h"
 #include "ros_lib/barrieduino/diaphragm.h"
+#include "ros_lib/barrieduino/HSL.h"
 #include "ros_lib/barrieduino/ledRing.h"
 
 // Custom services
