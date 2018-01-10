@@ -9,6 +9,7 @@
 
 #define CANISTER_TIMEOUT1   3000
 #define CANISTER_TIMEOUT2   500
+#define CANISTER_TIMEOUT3   1000
 #define DROP_TIMEOUT        1000
 #define COFFEE_PRESS_TIME   500
 
@@ -23,7 +24,7 @@ private:
     void rotateCanister();
 
 private:
-    uint32_t dropStart = 0, canisterRotStart = 0, canisterSwitchStart = 0, pressStart = 0;
+    uint32_t dropStart = 0, canisterRotStart = 0, canisterSwitchStart = 0, newCupStackStart = 0, pressStart = 0;
 };
 
 

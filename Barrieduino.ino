@@ -5,19 +5,6 @@
 #include "function_list.h"
 #include "ROS_code.h"
 
-/*
- * Rules of using ROS in Arduino code:
- *
- * Rule 1: No shared objects in header files. NONE, DO YOU HEAR ME?!@
- * Rule 2: All ROS things go in the main file (this one).
- *         Transferring it to a file which does nog contain setup() and loop() will not work.
- * Rule 3: Everything that you want to influence from within this file (or another) you do using functions.
- *         No direct mingling, USE GETTERS AND SETTERS YOU FUCK
- *
- * Thank you for your attention.
- */
-
-
 /*/-- Definitions --/*/
 
 #define SERVO_START_POS 0

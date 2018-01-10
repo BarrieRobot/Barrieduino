@@ -79,9 +79,14 @@ void CoffeeMachine::update() {
     // Canister holder is in position
     else if (canisterSwitchStart && canisterSwitchStart + CANISTER_TIMEOUT2 < millis() && digitalRead(CANISTER_SWITCH) == true) {
         canisterSwitchStart = 0;
+        newCupStackStart = millis();
         // Turn off canister rotation motor
         digitalWrite(CANISTER_ACTUATOR, HIGH);
-        // Throw warning if no cups are detected still. TODO: insert delay needed for cups to fall through
+    }
+    // Wait for either timeout or for detection of the new cup stack
+    else if (newCupStackStart && newCupStackStart + CANISTER_TIMEOUT3 < millis() || digitalRead(CUP_DET_SWITCH) == true) {
+        newCupStackStart = 0;
+        // Throw warning if no cups are detected still.
         if (digitalRead(CUP_DET_SWITCH) == false) {
             logWarn("Cup stock is completely depleted");
         } else {
