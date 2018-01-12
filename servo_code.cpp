@@ -79,6 +79,8 @@ void update_servos() {
 					d.servo.write(DIAPHRAGM_CLOSED_POS);
 				}
 
+				// Set position to new position and reset transition value
+				d.position = !d.position;
 				d.transition = 0;
 			}
 		}
