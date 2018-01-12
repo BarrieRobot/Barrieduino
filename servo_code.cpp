@@ -51,36 +51,35 @@ void update_servos() {
 			logInfo("Deactivated cold drink servo");
 		}
 	}
-	for (int i = 0; i < sizeof(diaphragms) / sizeof(Diaphragm); ++i) {
-		Diaphragm *d = &diaphragms[i];
+	for (auto &d : diaphragms) {
 		// If the diaphragm is in transition, linearly interpolate between the values
-		if (d->transition) {
-			if (millis() - d->transition < DIAPHRAGM_DURATION) {
+		if (d.transition) {
+			if (millis() - d.transition < DIAPHRAGM_DURATION) {
 				int deg;
-				if (d->position == 0) {
+				if (d.position == 0) {
 					// Opening the diaphragm
-					deg = map(millis() - d->transition,
+					deg = map(millis() - d.transition,
 							  0, DIAPHRAGM_DURATION,
 							  DIAPHRAGM_CLOSED_POS, DIAPHRAGM_OPEN_POS
 					);
 				} else {
 					// Closing the diaphragm
-					deg = map(millis() - d->transition,
+					deg = map(millis() - d.transition,
 							  0, DIAPHRAGM_DURATION,
 							  DIAPHRAGM_OPEN_POS, DIAPHRAGM_CLOSED_POS
 					);
 				}
-				d->servo.write(deg);
+				d.servo.write(deg);
 			} else {
-				if (d->position == 0) {
+				if (d.position == 0) {
 					// Opening the diaphragm
-					d->servo.write(DIAPHRAGM_OPEN_POS);
+					d.servo.write(DIAPHRAGM_OPEN_POS);
 				} else {
 					// Closing the diaphragm
-					d->servo.write(DIAPHRAGM_CLOSED_POS);
+					d.servo.write(DIAPHRAGM_CLOSED_POS);
 				}
 
-				d->transition = 0;
+				d.transition = 0;
 			}
 		}
 	}
