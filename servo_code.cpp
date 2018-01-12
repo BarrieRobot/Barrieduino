@@ -7,8 +7,15 @@
 #include <Servo.h>
 
 Servo ColdServo;
-Servo DiaphragmServo[sizeof(DiaphragmPins)];
 uint32_t TServoActivated = 0;
+
+struct Diaphragm {
+	const uint8_t pin;
+	bool position;
+	uint32_t transition;
+	Servo servo;
+};
+Diaphragm diaphragms[] = {{DiaphragmPins[0], false, 0}, {DiaphragmPins[1], false, 0}};
 
 void servo_innit() {
 	ColdServo.attach(COLD_SERVO_PWM_PIN);
@@ -23,7 +30,8 @@ void servo_innit() {
 		logInfo(buff);
 	}
 	for (uint8_t i = 0; i < sizeof(DiaphragmPins); ++i) {
-		DiaphragmServo[i].attach(DiaphragmPins[i]);
+		diaphragms[i].servo.attach(DiaphragmPins[i]);
+		diaphragms[i].servo.write(DIAPHRAGM_CLOSED_POS);
 
 		sprintf(buff, "Arduino: Attaching diaphragm servo %u on pin %u", i, DiaphragmPins[i]);
 		logInfo(buff);
@@ -40,7 +48,41 @@ void update_servos() {
 				digitalWrite(ColdServoPins[i], LOW);
 			}
 			TServoActivated = 0;	// Reset variable
-			logInfo("Deactivated servo");
+			logInfo("Deactivated cold drink servo");
+		}
+	}
+	for (auto &d : diaphragms) {
+		// If the diaphragm is in transition, linearly interpolate between the values
+		if (d.transition) {
+			if (millis() - d.transition < DIAPHRAGM_DURATION) {
+				int deg;
+				if (d.position == 0) {
+					// Opening the diaphragm
+					deg = map(millis() - d.transition,
+							  0, DIAPHRAGM_DURATION,
+							  DIAPHRAGM_CLOSED_POS, DIAPHRAGM_OPEN_POS
+					);
+				} else {
+					// Closing the diaphragm
+					deg = map(millis() - d.transition,
+							  0, DIAPHRAGM_DURATION,
+							  DIAPHRAGM_OPEN_POS, DIAPHRAGM_CLOSED_POS
+					);
+				}
+				d.servo.write(deg);
+			} else {
+				if (d.position == 0) {
+					// Opening the diaphragm
+					d.servo.write(DIAPHRAGM_OPEN_POS);
+				} else {
+					// Closing the diaphragm
+					d.servo.write(DIAPHRAGM_CLOSED_POS);
+				}
+
+				// Set position to new position and reset transition value
+				d.position = !d.position;
+				d.transition = 0;
+			}
 		}
 	}
 }
@@ -60,11 +102,21 @@ void ejectColdDrink(uint8_t drink) {
 }
 
 void moveDiaphragm(uint8_t diaphragm, bool position) {
-	if (position) {
-        logInfo("Opening diaphragm");
-		DiaphragmServo[diaphragm].write(DIAPHRAGM_OPEN_POS);
-	} else {
-        logInfo("Closing diaphragm");
-        DiaphragmServo[diaphragm].write(DIAPHRAGM_CLOSED_POS);
+	// Sanity checks
+	if (diaphragms[diaphragm].position == position) {
+		logInfo("Diaphragm already in position");
+		return;
+	} else if (diaphragms[diaphragm].transition) {
+		logInfo("Diaphragm still in transition");
 	}
+
+	// Set start of transition to current time
+	diaphragms[diaphragm].transition = millis();
+	char buff[25];
+	if (position) {
+		sprintf(buff, "Opening diaphragm %d", diaphragm);
+	} else {
+		sprintf(buff, "Closing diaphragm %d", diaphragm);
+	}
+	logInfo(buff);
 }
