@@ -22,18 +22,20 @@ void servo_innit() {
 	ColdServo.write(SERVO_START_POS);
 
 	char buff[65];
-	for (uint8_t i = 0; i < sizeof(ColdServoPins); ++i) {
-		pinMode(ColdServoPins[i], OUTPUT);
-		digitalWrite(ColdServoPins[i], LOW);
+	uint8_t i = 0;
+	for (auto &pin : ColdServoPins) {
+		pinMode(pin, OUTPUT);
+		digitalWrite(pin, LOW);
 
-		sprintf(buff, "Arduino: Registering cold drink servo %u with enable pin %u", i, ColdServoPins[i]);
+		sprintf(buff, "Arduino: Registering cold drink servo %u with enable pin %u", i++, pin);
 		logInfo(buff);
 	}
-	for (uint8_t i = 0; i < sizeof(DiaphragmPins); ++i) {
-		diaphragms[i].servo.attach(DiaphragmPins[i]);
-		diaphragms[i].servo.write(DIAPHRAGM_CLOSED_POS);
+	i = 0;
+	for (auto &d : diaphragms) {
+		d.servo.attach(DiaphragmPins[i]);
+		d.servo.write(DIAPHRAGM_CLOSED_POS);
 
-		sprintf(buff, "Arduino: Attaching diaphragm servo %u on pin %u", i, DiaphragmPins[i]);
+		sprintf(buff, "Arduino: Attaching diaphragm servo %u on pin %u", i++, DiaphragmPins[i]);
 		logInfo(buff);
 	}
 }
@@ -44,8 +46,8 @@ void update_servos() {
 	if (TServoActivated && (millis() > TServoActivated + SERVO_TIMEOUT)) {
 		ColdServo.write(SERVO_START_POS);
 		if (millis() > TServoActivated + 2*SERVO_TIMEOUT) {
-			for (uint8_t i = 0; i < sizeof(ColdServoPins); ++i) {
-				digitalWrite(ColdServoPins[i], LOW);
+			for (auto &pin : ColdServoPins) {
+				digitalWrite(pin, LOW);
 			}
 			TServoActivated = 0;	// Reset variable
 			logInfo("Deactivated cold drink servo");
