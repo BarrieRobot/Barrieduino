@@ -40,7 +40,40 @@ void update_servos() {
 				digitalWrite(ColdServoPins[i], LOW);
 			}
 			TServoActivated = 0;	// Reset variable
-			logInfo("Deactivated servo");
+			logInfo("Deactivated cold drink servo");
+		}
+	}
+	for (int i = 0; i < sizeof(diaphragms) / sizeof(Diaphragm); ++i) {
+		Diaphragm *d = &diaphragms[i];
+		// If the diaphragm is in transition, linearly interpolate between the values
+		if (d->transition) {
+			if (millis() - d->transition < DIAPHRAGM_DURATION) {
+				int deg;
+				if (d->position == 0) {
+					// Opening the diaphragm
+					deg = map(millis() - d->transition,
+							  0, DIAPHRAGM_DURATION,
+							  DIAPHRAGM_CLOSED_POS, DIAPHRAGM_OPEN_POS
+					);
+				} else {
+					// Closing the diaphragm
+					deg = map(millis() - d->transition,
+							  0, DIAPHRAGM_DURATION,
+							  DIAPHRAGM_OPEN_POS, DIAPHRAGM_CLOSED_POS
+					);
+				}
+				DiaphragmServo[i].write(deg);
+			} else {
+				if (d->position == 0) {
+					// Opening the diaphragm
+					DiaphragmServo[i].write(DIAPHRAGM_OPEN_POS);
+				} else {
+					// Closing the diaphragm
+					DiaphragmServo[i].write(DIAPHRAGM_CLOSED_POS);
+				}
+
+				d->transition = 0;
+			}
 		}
 	}
 }
@@ -60,11 +93,21 @@ void ejectColdDrink(uint8_t drink) {
 }
 
 void moveDiaphragm(uint8_t diaphragm, bool position) {
-	if (position) {
-        logInfo("Opening diaphragm");
-		DiaphragmServo[diaphragm].write(DIAPHRAGM_OPEN_POS);
-	} else {
-        logInfo("Closing diaphragm");
-        DiaphragmServo[diaphragm].write(DIAPHRAGM_CLOSED_POS);
+	// Sanity checks
+	if (diaphragms[diaphragm].position == position) {
+		logInfo("Diaphragm already in position");
+		return;
+	} else if (diaphragms[diaphragm].transition) {
+		logInfo("Diaphragm still in transition");
 	}
+
+	// Set start of transition to current time
+	diaphragms[diaphragm].transition = millis();
+	char buff[25];
+	if (position) {
+		sprintf(buff, "Opening diaphragm %d", diaphragm);
+	} else {
+		sprintf(buff, "Closing diaphragm %d", diaphragm);
+	}
+	logInfo(buff);
 }
