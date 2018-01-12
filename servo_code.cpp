@@ -7,8 +7,15 @@
 #include <Servo.h>
 
 Servo ColdServo;
-Servo DiaphragmServo[sizeof(DiaphragmPins)];
 uint32_t TServoActivated = 0;
+
+struct Diaphragm {
+	const uint8_t pin;
+	bool position;
+	uint32_t transition;
+	Servo servo;
+};
+Diaphragm diaphragms[] = {{DiaphragmPins[0], false, 0}, {DiaphragmPins[1], false, 0}};
 
 void servo_innit() {
 	ColdServo.attach(COLD_SERVO_PWM_PIN);
@@ -23,7 +30,8 @@ void servo_innit() {
 		logInfo(buff);
 	}
 	for (uint8_t i = 0; i < sizeof(DiaphragmPins); ++i) {
-		DiaphragmServo[i].attach(DiaphragmPins[i]);
+		diaphragms[i].servo.attach(DiaphragmPins[i]);
+		diaphragms[i].servo.write(DIAPHRAGM_CLOSED_POS);
 
 		sprintf(buff, "Arduino: Attaching diaphragm servo %u on pin %u", i, DiaphragmPins[i]);
 		logInfo(buff);
@@ -62,14 +70,14 @@ void update_servos() {
 							  DIAPHRAGM_OPEN_POS, DIAPHRAGM_CLOSED_POS
 					);
 				}
-				DiaphragmServo[i].write(deg);
+				d->servo.write(deg);
 			} else {
 				if (d->position == 0) {
 					// Opening the diaphragm
-					DiaphragmServo[i].write(DIAPHRAGM_OPEN_POS);
+					d->servo.write(DIAPHRAGM_OPEN_POS);
 				} else {
 					// Closing the diaphragm
-					DiaphragmServo[i].write(DIAPHRAGM_CLOSED_POS);
+					d->servo.write(DIAPHRAGM_CLOSED_POS);
 				}
 
 				d->transition = 0;

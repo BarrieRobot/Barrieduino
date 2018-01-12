@@ -25,12 +25,6 @@
 #define COLD_SERVO_PWM_PIN 9
 const uint8_t ColdServoPins[] = {17, 18, 19};
 const uint8_t DiaphragmPins[] = {22, 23};
-struct Diaphragm {
-    const uint8_t pin;
-    bool position;
-    uint32_t transition;
-};
-Diaphragm diaphragms[] = {{DiaphragmPins[0], false, 0}, {DiaphragmPins[1], false, 0}};
 
 #define CUP_DROP_SWITCH 43
 #define CUP_DET_SWITCH  40
