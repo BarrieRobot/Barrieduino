@@ -14,16 +14,16 @@
 
 #define ONE_WIRE_PIN    2
 
-#define SERVO_POWER_PIN 5
-#define SERVO_START_POS 10
-#define SERVO_END_POS   70
-#define SERVO_TIMEOUT   1000
-
 #define DIAPHRAGM_CLOSED_POS    50
 #define DIAPHRAGM_OPEN_POS      140
 #define DIAPHRAGM_DURATION      1000
 
-const uint8_t ColdServoPins[] = {9, 10, 11};
+#define SERVO_START_POS 10
+#define SERVO_END_POS   70
+#define SERVO_TIMEOUT   1000
+
+#define COLD_SERVO_PWM_PIN 9
+const uint8_t ColdServoPins[] = {17, 18, 19};
 const uint8_t DiaphragmPins[] = {22, 23};
 
 #define CUP_DROP_SWITCH 43

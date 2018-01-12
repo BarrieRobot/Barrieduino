@@ -7,12 +7,7 @@
 
 /*/-- Definitions --/*/
 
-#define SERVO_START_POS 0
-#define SERVO_END_POS   90
-#define SERVO_TIMEOUT   1000
-
-#define RFID_TIMEOUT    50
-
+// See wire_scheme.h
 
 /*/-- Function declarations --/*/
 
