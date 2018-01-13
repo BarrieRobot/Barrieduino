@@ -28,6 +28,7 @@ private:
     void pulseMode(uint16_t duration);
     void pulseRainbow(uint16_t duration);
     void singlePulseMode(uint16_t duration);
+    void diaphragmMode(bool direction);
     inline uint16_t promilleToFrac(uint16_t promille);
     CRGB leds[NUM_LEDS];
     uint8_t hue = 0, sat = 0, val = 255;

@@ -12,7 +12,7 @@ void LED_ring::begin(const uint8_t ring) {
     FastLED.setBrightness(BRIGHTNESS);
 }
 
-// TODO: use custom colour
+// TODO: use custom colour, see diaphragm mode function
 void LED_ring::progressMode(uint16_t promille) {
     uint16_t progress = promilleToFrac(promille);
     bool reached_last = false;
@@ -34,7 +34,7 @@ void LED_ring::progressMode(uint16_t promille) {
     reqUpdate = false;  // No updates are required as long as the parameter doesn't change
 }
 
-uint16_t LED_ring::promilleToFrac(uint16_t promille) {
+inline uint16_t LED_ring::promilleToFrac(uint16_t promille) {
     return (((uint32_t) promille << 8) * (uint8_t) NUM_LEDS) / 1000;
 }
 
@@ -77,6 +77,44 @@ void LED_ring::singlePulseMode(uint16_t duration) {
     }
 }
 
+void LED_ring::diaphragmMode(bool direction) {
+    // Get color that should be inserted in the array
+    const CRGB color = CHSV(hue, sat, val);
+
+    const uint16_t max_val (255 * 10);
+    uint16_t subtractor = map(millis() - effectStart, 0, DIAPHRAGM_DURATION, 0, max_val);
+    subtractor = (direction ? max_val - subtractor : subtractor);   // If the diaphragm is opening, the animation should be reversed
+
+    // There are 6 blades in the diaphragm
+    for (uint8_t i = 0; i < 6; ++i) {
+        auto val = subtractor;
+        bool reached_last = false;
+
+        // There are 10 LEDs per blade of the diaphragm (60/6 blades)
+        for (uint8_t j = 0; j < 10; ++j) {
+            // uint8_t index = (i == 5 && j > DIAPHRAGM_LED_OFFSET ? j - DIAPHRAGM_LED_OFFSET : i*10 + j + DIAPHRAGM_LED_OFFSET);
+            uint8_t index = i*10 + j + DIAPHRAGM_LED_OFFSET;
+            if (index > NUM_LEDS) { index -= 60; }
+
+            // Imagine this as a the 10 led moving with the diaphragm (---*######)
+            // The LEDs that are supposed to be on up to the position of the blade at this moment
+            if (reached_last)       // LED is on (#)
+            {
+                leds[index] = color;
+            } else if (val > 0xFF)  // LED is off (-)
+            {
+                leds[index] = 0;
+                val -= 0xFF;
+            } else                  // LED is dimmed (*)
+            {
+                auto temp = color;
+                leds[index] = temp.fadeToBlackBy(val);
+                reached_last = true;
+            }
+        }
+    }
+}
+
 void LED_ring::setBaseColor(uint8_t _hue, uint8_t _sat, uint8_t _val) {
     hue = _hue;
     sat = _sat;
@@ -87,15 +125,24 @@ void LED_ring::show() {
     // Only calculate an update when one is actually necessary
     if (reqUpdate) {
         if (mode == 0) {
-            progressMode(param);
+            bool done = true;
+            for (auto& led : leds) {
+                led.fadeToBlackBy(30);  // Arbitrary value. Higher is faster fade.
+                done &= !((bool) led);
+            }
+            reqUpdate = !done;  // Updates are only required if not fully faded yet
         } else if (mode == 1) {
-            rainbowWave();
+            progressMode(param);
         } else if (mode == 2) {
-            pulseMode(param);
+            rainbowWave();
         } else if (mode == 3) {
-            pulseRainbow(param);
+            pulseMode(param);
         } else if (mode == 4) {
+            pulseRainbow(param);
+        } else if (mode == 5) {
             singlePulseMode(param);
+        } else if (mode == 6) {
+            diaphragmMode(static_cast<bool>(param));
         }
     }
 }

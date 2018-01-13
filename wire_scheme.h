@@ -26,6 +26,8 @@
 const uint8_t ColdServoPins[] = {17, 18, 19};
 const uint8_t DiaphragmPins[] = {22, 23};
 
+#define DIAPHRAGM_LED_OFFSET 5
+
 #define CUP_DROP_SWITCH 43
 #define CUP_DET_SWITCH  40
 #define CANISTER_SWITCH 41
