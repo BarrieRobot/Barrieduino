@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <FastLED.h>
 #include <Streaming.h>
 
 #include "wire_scheme.h"
@@ -69,12 +70,8 @@ void ros_LED(const barrieduino::ledRing message) {
         return;
     }
 
-    rings[message.ring].setMode(message.mode);
+    rings[message.ring].setMode(message.mode, message.param);
     rings[message.ring].setBaseColor(message.color.hue, message.color.sat, message.color.val);
-
-    if (message.mode == 0) {
-        rings[message.ring].progressMode(message.param);
-    }
 }
 
 void sensorRequest(const sensorRequest::Request &request, sensorRequest::Response &response) {
@@ -154,8 +151,16 @@ void setup() {
 }
 
 void loop() {
-    // Send data to LED strip
-    rings[0].show();
+    bool reqUpdate = false;
+    // Render LED effects
+    for (auto& ring : rings) {
+        ring.show();
+        reqUpdate |= ring.reqUpdate;
+    }
+    if (reqUpdate) {
+        // Send data to LED strip, but only if this actually needs to be done
+        FastLED.show();
+    }
     
     // If a new tag is detected, wait RFID_TIMEOUT ms and collect the tag info
     if (Serial1.available()) {
