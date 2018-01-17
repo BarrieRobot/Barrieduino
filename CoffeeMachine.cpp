@@ -84,7 +84,7 @@ void CoffeeMachine::update() {
         digitalWrite(CANISTER_ACTUATOR, HIGH);
     }
     // Wait for either timeout or for detection of the new cup stack
-    else if (newCupStackStart && newCupStackStart + CANISTER_TIMEOUT3 < millis() || digitalRead(CUP_DET_SWITCH) == true) {
+    else if (newCupStackStart && (newCupStackStart + CANISTER_TIMEOUT3 < millis() || digitalRead(CUP_DET_SWITCH) == true)) {
         newCupStackStart = 0;
         // Throw warning if no cups are detected still.
         if (digitalRead(CUP_DET_SWITCH) == false) {
