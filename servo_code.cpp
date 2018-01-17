@@ -11,21 +11,26 @@ uint32_t TServoActivated = 0;
 
 struct Diaphragm {
 	const uint8_t pin;
+	const uint8_t closed_angle, open_angle;
 	bool position;
 	uint32_t transition;
 	Servo servo;
 };
-Diaphragm diaphragms[] = {{DiaphragmPins[0], false, 0}, {DiaphragmPins[1], false, 0}};
+Diaphragm diaphragms[] = {{DiaphragmPins[0], 100, 145, false, 0},	// Cold drinks, pink wire
+						  {DiaphragmPins[1], 90, 130, false, 0}};	// Hot drinks, white wire
 
-void servo_innit() {
+void servo_init() {
+	char buff[65];
 	ColdServo.attach(COLD_SERVO_PWM_PIN);
 	ColdServo.write(SERVO_START_POS);
 
-	char buff[65];
+	sprintf(buff, "Arduino: Attached cold servo PWM pin to %u", COLD_SERVO_PWM_PIN);
+	logInfo(buff);
+
 	uint8_t i = 0;
 	for (auto &pin : ColdServoPins) {
 		pinMode(pin, OUTPUT);
-		digitalWrite(pin, LOW);
+		digitalWrite(pin, HIGH);
 
 		sprintf(buff, "Arduino: Registering cold drink servo %u with enable pin %u", i++, pin);
 		logInfo(buff);
@@ -33,7 +38,7 @@ void servo_innit() {
 	i = 0;
 	for (auto &d : diaphragms) {
 		d.servo.attach(DiaphragmPins[i]);
-		d.servo.write(DIAPHRAGM_CLOSED_POS);
+		d.servo.write(d.closed_angle);
 
 		sprintf(buff, "Arduino: Attaching diaphragm servo %u on pin %u", i++, DiaphragmPins[i]);
 		logInfo(buff);
@@ -47,44 +52,54 @@ void update_servos() {
 		ColdServo.write(SERVO_START_POS);
 		if (millis() > TServoActivated + 2*SERVO_TIMEOUT) {
 			for (auto &pin : ColdServoPins) {
-				digitalWrite(pin, LOW);
+				digitalWrite(pin, HIGH);
 			}
 			TServoActivated = 0;	// Reset variable
 			logInfo("Deactivated cold drink servo");
 		}
 	}
 	for (auto &d : diaphragms) {
+		char buff[200];
+
 		// If the diaphragm is in transition, linearly interpolate between the values
 		if (d.transition) {
-			if (millis() - d.transition < DIAPHRAGM_DURATION) {
+			if (d.transition + DIAPHRAGM_DURATION > millis()) {
 				int deg;
 				if (d.position == 0) {
 					// Opening the diaphragm
 					deg = map(millis() - d.transition,
 							  0, DIAPHRAGM_DURATION,
-							  DIAPHRAGM_CLOSED_POS, DIAPHRAGM_OPEN_POS
+							  d.closed_angle, d.open_angle
 					);
 				} else {
 					// Closing the diaphragm
 					deg = map(millis() - d.transition,
 							  0, DIAPHRAGM_DURATION,
-							  DIAPHRAGM_OPEN_POS, DIAPHRAGM_CLOSED_POS
+							  d.open_angle, d.closed_angle
 					);
 				}
 				d.servo.write(deg);
+				sprintf(buff, "Diaphragm: writing %u deg to pin %u", deg, d.pin);
+				logInfo(buff);
 			} else {
+				logInfo("Diaphragm: transition over");
 				if (d.position == 0) {
 					// Opening the diaphragm
-					d.servo.write(DIAPHRAGM_OPEN_POS);
+					d.servo.write(d.open_angle);
 				} else {
 					// Closing the diaphragm
-					d.servo.write(DIAPHRAGM_CLOSED_POS);
+					d.servo.write(d.closed_angle);
 				}
+
+				// TODO: insert delay so the diaphragm can fully close
+				d.servo.detach();
 
 				// Set position to new position and reset transition value
 				d.position = !d.position;
 				d.transition = 0;
 			}
+		} else if (d.servo.attached()) {
+			d.servo.detach();
 		}
 	}
 }
@@ -93,7 +108,7 @@ void ejectColdDrink(uint8_t drink) {
 	if (drink < sizeof(ColdServoPins)) {
 		// Set time the servo was activated to set off reset after SERVO_TIMEOUT
 		TServoActivated = static_cast<uint32_t>(millis());
-		digitalWrite(ColdServoPins[drink], HIGH);
+		digitalWrite(ColdServoPins[drink], LOW);
 		ColdServo.write(SERVO_END_POS);
 		char buff[60];
 		sprintf(buff, "Arduino: Activating servo %u with pin %u", drink, ColdServoPins[drink]);
@@ -114,11 +129,12 @@ void moveDiaphragm(uint8_t diaphragm, bool position) {
 
 	// Set start of transition to current time
 	diaphragms[diaphragm].transition = millis();
+	diaphragms[diaphragm].servo.attach(DiaphragmPins[diaphragm]);
 	char buff[25];
 	if (position) {
-		sprintf(buff, "Opening diaphragm %d", diaphragm);
+		sprintf(buff, "Opening diaphragm %u", diaphragm);
 	} else {
-		sprintf(buff, "Closing diaphragm %d", diaphragm);
+		sprintf(buff, "Closing diaphragm %u", diaphragm);
 	}
 	logInfo(buff);
 }
