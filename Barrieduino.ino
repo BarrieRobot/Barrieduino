@@ -40,6 +40,7 @@ void ROS_init() {
     nh.advertise(RFID_pub);
     nh.subscribe(LED_subscriber);
     nh.subscribe(activateOrder_sub);
+    nh.subscribe(diaphragm_subscriber);
     nh.advertiseService(sensorRequest_server);
 
     //nh.serviceClient(client);
@@ -121,8 +122,6 @@ void logInfo(const char* message) { nh.loginfo(message); }
 void logWarn(const char* message) { nh.logwarn(message); }
 
 void setup() {
-    delay(500);
-    
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWrite(LED_BUILTIN, LOW);
     
@@ -130,7 +129,10 @@ void setup() {
     Serial.begin(57600);
     // Initiate RFID reader connection
     Serial1.begin(19200);
-    
+
+    // Initialise ROS, its subscribers, publishers and services
+    ROS_init();
+
     // Initialise FastLED rings
     rings[0].begin(0);
     rings[1].begin(1);
@@ -140,12 +142,9 @@ void setup() {
 
     coffeeMachine.begin();
 
-    // Initialise ROS, its subscribers, publishers and services
-    ROS_init();
-    
     // Initialise all servos
-    servo_innit();
-    
+    servo_init();
+
     //while(!nh.connected()) nh.spinOnce();
     logInfo("Arduino: Startup complete");
 }

@@ -9,8 +9,8 @@
 
 #define RFID_TIMEOUT    50
 
-#define LED1_PIN        3
-#define LED2_PIN        4
+#define LED1_PIN        20
+#define LED2_PIN        21
 
 #define ONE_WIRE_PIN    2
 
@@ -22,18 +22,20 @@
 #define SERVO_END_POS   70
 #define SERVO_TIMEOUT   1000
 
-#define COLD_SERVO_PWM_PIN 9
-const uint8_t ColdServoPins[] = {17, 18, 19};
-const uint8_t DiaphragmPins[] = {22, 23};
+#define COLD_SERVO_PWM_PIN 33
+//#define INTERRUPT_PIN_COLD 3
+const uint8_t ColdServoPins[] = {31, 29, 30};
+const uint8_t ColdDetectionPins[] = {26, 27, 28};
+const uint8_t DiaphragmPins[] = {16, 17};
 
 #define DIAPHRAGM_LED_OFFSET 5
 
-#define CUP_DROP_SWITCH 43
-#define CUP_DET_SWITCH  40
-#define CANISTER_SWITCH 41
+#define CUP_DROP_SWITCH 52
+#define CUP_DET_SWITCH  51
+#define CANISTER_SWITCH 53
 
-#define DISPENSING_ACTUATOR 50
-#define CANISTER_ACTUATOR   51
+#define DISPENSING_ACTUATOR A7
+#define CANISTER_ACTUATOR   A6
 
 //const uint8_t CoffeeKeys[] = {A10, A9, A8, A12, A11};
 const uint8_t CoffeeKeys[] = {A12, A11, A10, A9, A8};

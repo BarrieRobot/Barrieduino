@@ -8,7 +8,7 @@
 #include "ROS_include.h"
 
 // Servos
-void servo_innit();
+void servo_init();
 void update_servos();
 void ejectColdDrink(uint8_t drink);
 void moveDiaphragm(uint8_t diaphragm, bool position);
