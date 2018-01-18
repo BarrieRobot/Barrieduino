@@ -13,11 +13,11 @@ struct Diaphragm {
 	const uint8_t pin;
 	const uint8_t closed_angle, open_angle;
 	bool position;
-	uint32_t transition;
+	uint32_t transition, afterparty;
 	Servo servo;
 };
-Diaphragm diaphragms[] = {{DiaphragmPins[0], 100, 145, false, 0},	// Cold drinks, pink wire
-						  {DiaphragmPins[1], 90, 130, false, 0}};	// Hot drinks, white wire
+Diaphragm diaphragms[] = {{DiaphragmPins[0], 100, 145, false, 0, 0},	// Cold drinks, pink wire
+						  {DiaphragmPins[1], 85, 130, false, 0, 0}};	// Hot drinks, white wire
 
 void servo_init() {
 	char buff[65];
@@ -39,6 +39,7 @@ void servo_init() {
 	for (auto &d : diaphragms) {
 		d.servo.attach(DiaphragmPins[i]);
 		d.servo.write(d.closed_angle);
+		d.afterparty = millis();
 
 		sprintf(buff, "Arduino: Attaching diaphragm servo %u on pin %u", i++, DiaphragmPins[i]);
 		logInfo(buff);
@@ -59,8 +60,6 @@ void update_servos() {
 		}
 	}
 	for (auto &d : diaphragms) {
-		char buff[200];
-
 		// If the diaphragm is in transition, linearly interpolate between the values
 		if (d.transition) {
 			if (d.transition + DIAPHRAGM_DURATION > millis()) {
@@ -79,8 +78,9 @@ void update_servos() {
 					);
 				}
 				d.servo.write(deg);
+				/*char buff[200];
 				sprintf(buff, "Diaphragm: writing %u deg to pin %u", deg, d.pin);
-				logInfo(buff);
+				logInfo(buff);*/
 			} else {
 				logInfo("Diaphragm: transition over");
 				if (d.position == 0) {
@@ -91,15 +91,15 @@ void update_servos() {
 					d.servo.write(d.closed_angle);
 				}
 
-				// TODO: insert delay so the diaphragm can fully close
-				d.servo.detach();
+				d.afterparty = millis();
 
 				// Set position to new position and reset transition value
 				d.position = !d.position;
 				d.transition = 0;
 			}
-		} else if (d.servo.attached()) {
+		} else if (d.afterparty && d.afterparty + DIAPHRAGM_AFTERPARTY < millis()) {
 			d.servo.detach();
+			d.afterparty = 0;
 		}
 	}
 }

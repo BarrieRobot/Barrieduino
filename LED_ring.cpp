@@ -83,7 +83,9 @@ void LED_ring::diaphragmMode(bool direction) {
 
     const uint16_t max_val (255 * 10);
     uint16_t subtractor = map(millis() - effectStart, 0, DIAPHRAGM_DURATION, 0, max_val);
+    char buff[200];
     subtractor = (direction ? max_val - subtractor : subtractor);   // If the diaphragm is opening, the animation should be reversed
+    sprintf(buff, "subtractor = %u", subtractor);
 
     // There are 6 blades in the diaphragm
     for (uint8_t i = 0; i < 6; ++i) {
@@ -112,6 +114,11 @@ void LED_ring::diaphragmMode(bool direction) {
                 reached_last = true;
             }
         }
+    }
+
+    // After effect fade to black
+    if (millis() - effectStart > DIAPHRAGM_DURATION) {
+        setMode(0, 500);
     }
 }
 

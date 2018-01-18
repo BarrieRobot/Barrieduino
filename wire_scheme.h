@@ -14,17 +14,16 @@
 
 #define ONE_WIRE_PIN    2
 
-#define DIAPHRAGM_CLOSED_POS    50
-#define DIAPHRAGM_OPEN_POS      140
 #define DIAPHRAGM_DURATION      1000
+#define DIAPHRAGM_AFTERPARTY 1500
 
 #define SERVO_START_POS 10
 #define SERVO_END_POS   70
 #define SERVO_TIMEOUT   1000
 
-#define COLD_SERVO_PWM_PIN 33
+#define COLD_SERVO_PWM_PIN 35
 //#define INTERRUPT_PIN_COLD 3
-const uint8_t ColdServoPins[] = {31, 29, 30};
+const uint8_t ColdServoPins[] = {33, 31, 32};
 const uint8_t ColdDetectionPins[] = {26, 27, 28};
 const uint8_t DiaphragmPins[] = {16, 17};
 

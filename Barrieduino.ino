@@ -62,6 +62,7 @@ void activateOrder(const barrieduino::activateOrder message) {
 }
 
 void ros_diaphragm(const barrieduino::diaphragm message) {
+    rings[message.diaphragm].setMode(6, static_cast<uint16_t>(message.position != 0));
     moveDiaphragm(message.diaphragm, message.position);
 }
 
